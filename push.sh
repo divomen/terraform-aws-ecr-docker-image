@@ -19,7 +19,8 @@ tag="${3:-latest}"
 region="$(echo "$repository_url" | cut -d. -f4)"
 image_name="$(echo "$repository_url" | cut -d/ -f2)"
 
-(cd "$source_path" && docker build -t "$image_name" .)
+# (cd "$source_path" && docker build -t "$image_name" .)
+(cd "$source_path" && docker buildx build --platform "linux/amd64" -t "$image_name" .)
 
 aws ecr get-login-password --region "$region" | docker login --username AWS --password-stdin "$repository_url"
 docker tag "$image_name" "$repository_url":"$tag"
